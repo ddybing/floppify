@@ -1,8 +1,8 @@
-# Floppify
-
 <p align="center">
   <img src="logo.png" alt="Floppify logo" />
 </p>
+
+___
 
 The main objective of this project is to create a bootable collection of the operating systems created in IKT218. 
 
