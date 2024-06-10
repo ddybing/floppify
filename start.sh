@@ -79,7 +79,7 @@ for student_folder in "$students_dir"/*; do
     CONTAINER_ID=$(docker run -d -v $source_folder:/src -v $build_folder:/build $IMAGE_ID)
 
     if [ -f "$build_folder/kernel.bin" ]; then
-      \mv "$build_folder/kernel.bin" "$build_folder/$group_name.bin"
+      \mv -f "$build_folder/kernel.bin" "$build_folder/$group_name.bin"
       echo "Copying group_name.bin to ./images"
       cp "$build_folder/$group_name.bin" ./images
     fi
@@ -90,6 +90,7 @@ for student_folder in "$students_dir"/*; do
 
     echo "Deleting container"
     docker rm $CONTAINER_ID
+    echo ""
   else
     echo "$student_folder is not a directory"
   fi
@@ -105,7 +106,7 @@ for kernel_file in ./images/*.bin; do
 done
 
 
-# Create memdisk image of 1MB
+# Create memdisk image of 2458 sectors (approx 1.2MiB)
 echo "Creating memdisk image"
 dd if=/dev/zero of=./floppy/memdisk.img bs=512 count=2458
 
@@ -113,5 +114,5 @@ dd if=/dev/zero of=./floppy/memdisk.img bs=512 count=2458
 # Mount memdisk image (requires sudo)
 echo "Mounting memdisk image"
 mkdir memdisk-mount
-mformat -i memdisk.img
+mkfs.vfat ./floppy/memdisk.img
 sudo mount -o loop ./floppy/memdisk.img memdisk-mount
