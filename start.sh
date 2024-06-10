@@ -121,13 +121,27 @@ sudo mkdir -p memdisk-mount/boot/grub
 sudo mkdir -p memdisk-mount/boot/kernels
 
 # Copy kernels
+echo "Copying student kernels"
 sudo cp ./images/*.bin.xz memdisk-mount/boot/kernels/
 
 # Copy required modules to memdisk
+echo "Copying GRUB files"
 sudo cp /usr/lib/grub/i386-pc/{biosdisk,configfile,fat,ls,memdisk,multiboot,multiboot2,normal,part_msdos}.mod memdisk-mount/boot/grub/
+
+# Generate grub config
+
+
 
 # Unmount memdisk mount
 sudo umount memdisk-mount
 
 # Create GRUB image
 grub-mkimage -C none -O i386-pc -o ./floppy/grub.img multiboot2 multiboot part_msdos biosdisk normal ls configfile fat memdisk -m ./floppy/memdisk.img -v
+
+# Write images to floppy image
+dd if=/usr/lib/grub/i386-pc/boot.img of=./floppy/floppy.img bs=512 count=1 conv=notrunc
+dd if=./floppy/grub.img of=./floppy/floppy.img bs=512 seek=1 conv=notrunc
+
+echo ""
+echo ""
+echo "DONE!"
