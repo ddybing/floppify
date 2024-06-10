@@ -14,5 +14,5 @@ jobs:
       run: |
         chmod +x ./start.sh
         sudo apt update
-        sudo apt install -y python3 mformat
+        sudo apt install -y python3
         ./start.sh
