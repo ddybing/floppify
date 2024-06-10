@@ -47,12 +47,15 @@ for student_folder in "$students_dir"/*; do
 
     if [ -z "$source_folder" ]; then
       echo "No source folder found in $student_folder"
+      echo ""
       continue
     fi
 
     if [ -z "$build_folder" ]; then
       echo "No build folder found in $student_folder"
+      echo ""
       continue
+      
     fi
 
     echo "Source folder found: $source_folder"
@@ -111,7 +114,7 @@ done
 
 # Create memdisk image of 2458 sectors (approx 1.2MiB)
 echo "Creating and formatting memdisk image"
-dd if=/dev/zero of=./floppy/memdisk.img bs=512 count=2458
+dd if=/dev/zero of=./floppy/memdisk.img bs=512 count=2000
 mkfs.vfat ./floppy/memdisk.img
 
 
@@ -125,25 +128,42 @@ sudo mkdir -p memdisk-mount/kernels
 
 # Copy kernels
 echo "Copying student kernels"
-sudo cp ./images/*.bin.xz memdisk-mount/kernels
+#sudo cp ./images/*.bin.xz memdisk-mount/kernels
+#max=13
+#count=0
+#for kernel_file in ./images/*.bin.xz; do
+#  if [ -f "$kernel_file" ]; then
+#    base_name=$(basename "$kernel_file" .bin.xz)
+#    sudo cp "$kernel_file" "memdisk-mount/kernels/$base_name.bin.xz"
+#    count=$((count+1))
+#    if [ $count -eq $max ]; then
+#      break
+#    fi
+#  fi
+#done
 
 # Copy required modules to memdisk
 echo "Copying GRUB files"
-sudo cp /usr/lib/grub/i386-pc/{biosdisk,configfile,fat,ls,memdisk,multiboot,multiboot2,normal,part_msdos}.mod memdisk-mount/kernels/
+sudo cp /usr/lib/grub/i386-pc/{biosdisk,configfile,ext2,fat,gzio,ls,memdisk,multiboot,multiboot2,normal,part_gpt,part_msdos,xzio}.mod memdisk-mount/boot/grub/
 
 # Generate grub config
 
+
+sudo cp grub.cfg memdisk-mount/boot/grub/grub.cfg
 
 
 # Unmount memdisk mount
 sudo umount memdisk-mount
 
 # Create GRUB image
-grub-mkimage -C none -O i386-pc -o ./floppy/grub.img multiboot2 multiboot part_msdos biosdisk normal ls configfile fat memdisk -m ./floppy/memdisk.img -v
+grub-mkimage -C auto -p /boot/grub -O i386-pc -c grub.cfg -o ./floppy/grub.img ext2 part_gpt gzio xzio multiboot2 multiboot part_msdos biosdisk normal ls configfile fat memdisk -m ./floppy/memdisk.img -v
 
 # Write images to floppy image
 dd if=/usr/lib/grub/i386-pc/boot.img of=./floppy/floppy.img bs=512 count=1 conv=notrunc
 dd if=./floppy/grub.img of=./floppy/floppy.img bs=512 seek=1 conv=notrunc
+
+# Write custom partition table to image
+
 
 echo ""
 echo ""
