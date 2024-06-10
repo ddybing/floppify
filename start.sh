@@ -16,6 +16,9 @@ fi
 # Download students forks
 python3 download_forks.py
 
+echo "Pulling Docker image"
+docker pull ghcr.io/ddybing/floppify:latest
+
 find_sourcefolder()
 {
   local base_dir="$1"
@@ -68,15 +71,15 @@ for student_folder in "$students_dir"/*; do
     # Replace ". = 1M;" with ". = ${start_offset}M;" in linker.ld
     #sed -i "s/\. = [0-9]*M;/\. = ${start_offset}M;/g" $source_folder/src/arch/i386/linker.ld
 
-    echo "Building Docker image"
+    #echo "Building Docker image"
 
-    #IMAGE_ID=$(docker build --build-arg GRPNAME=$group_name --build-arg STUDENTFOLDER=$base_dir -f Dockerfile . -q)
-    IMAGE_ID=$(docker build -f Dockerfile . -q)
+    #IMAGE_ID=$(docker build -f Dockerfile . -q)
 
-    echo "Image ID: $IMAGE_ID"
+    #echo "Image ID: $IMAGE_ID"
+
 
     echo "Running build of OS for group $group_name"
-    CONTAINER_ID=$(docker run -d -v $source_folder:/src -v $build_folder:/build $IMAGE_ID)
+    CONTAINER_ID=$(docker run -d -v $source_folder:/src -v $build_folder:/build ghcr.io/ddybing/floppify:latest)
 
     if [ -f "$build_folder/kernel.bin" ]; then
       \mv -f "$build_folder/kernel.bin" "$build_folder/$group_name.bin"
