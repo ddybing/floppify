@@ -121,7 +121,7 @@ mkdir -p memdisk-mount
 sudo mount -o loop ./floppy/memdisk.img memdisk-mount
 
 sudo mkdir -p memdisk-mount/boot/grub
-sudo mkdir -p memdisk-mount/boot/kernels
+sudo mkdir -p memdisk-mount/kernels
 
 # Copy kernels
 echo "Copying student kernels"
