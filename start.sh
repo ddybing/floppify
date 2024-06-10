@@ -5,6 +5,12 @@ students_dir="./students"
 # Create necessary folders
 mkdir -p images students floppy
 
+# Set Grub and kernel variables
+directory="./images"
+
+# Output GRUB configuration file
+grub_cfg="grub.cfg"
+
 
 # Check if /usr/lib/grub/i386-pc exists (basically check if Grub is installed)
 if [ ! -d "/usr/lib/grub/i386-pc" ]; then
@@ -147,6 +153,39 @@ echo "Copying GRUB files"
 sudo cp /usr/lib/grub/i386-pc/{biosdisk,configfile,ext2,fat,gzio,ls,memdisk,multiboot,multiboot2,normal,part_gpt,part_msdos,xzio}.mod memdisk-mount/boot/grub/
 
 # Generate grub config
+> grub.cfg
+echo "insmod gzio" >> grub.cfg
+echo "insmod xzio" >> grub.cfg
+echo "insmod multiboot2" >> grub.cfg
+echo "insmod multiboot" >> grub.cfg
+echo "insmod part_msdos" >> grub.cfg
+echo "insmod biosdisk" >> grub.cfg
+echo "insmod normal" >> grub.cfg
+echo "insmod ls" >> grub.cfg
+echo "insmod configfile" >> grub.cfg
+echo "insmod fat" >> grub.cfg
+echo "insmod memdisk" >> grub.cfg
+echo "insmod ext2" >> grub.cfg
+echo "insmod part_gpt" >> grub.cfg
+
+echo "set timeout=60" >> grub.cfg
+echo "set default=0" >> grub.cfg
+echo "set GRUB_TIMEOUT_STYLE=menu" >> grub.cfg
+
+for file in "$directory"/*.bin.xz; do
+  if [[ -f "$file" ]]; then
+    filename=$(basename -- "$file")
+    entry_name="Boot ${filename%.bin.xz}"
+
+    cat <<EOL >> "$grub_cfg"
+menuentry '$entry_name' {
+    multiboot2 (fd0,msdos1)/kernels/$filename
+    boot
+}
+EOL
+
+  fi
+done
 
 
 sudo cp grub.cfg memdisk-mount/boot/grub/grub.cfg
