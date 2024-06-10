@@ -122,11 +122,11 @@ sudo mkdir -p memdisk-mount/boot/kernels
 
 # Copy kernels
 echo "Copying student kernels"
-sudo cp ./images/*.bin.xz memdisk-mount/boot/kernels/
+sudo cp ./images/*.bin.xz memdisk-mount/kernels
 
 # Copy required modules to memdisk
 echo "Copying GRUB files"
-sudo cp /usr/lib/grub/i386-pc/{biosdisk,configfile,fat,ls,memdisk,multiboot,multiboot2,normal,part_msdos}.mod memdisk-mount/boot/grub/
+sudo cp /usr/lib/grub/i386-pc/{biosdisk,configfile,fat,ls,memdisk,multiboot,multiboot2,normal,part_msdos}.mod memdisk-mount/kernels/
 
 # Generate grub config
 
