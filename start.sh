@@ -118,9 +118,9 @@ for kernel_file in ./images/*.bin; do
 done
 
 
-# Create memdisk image of 2458 sectors (approx 1.2MiB)
+# Create memdisk image
 echo "Creating and formatting memdisk image"
-dd if=/dev/zero of=./floppy/memdisk.img bs=512 count=2000
+dd if=/dev/zero of=./floppy/memdisk.img bs=512 count=800
 mkfs.vfat ./floppy/memdisk.img
 
 
@@ -130,23 +130,6 @@ mkdir -p memdisk-mount
 sudo mount -o loop ./floppy/memdisk.img memdisk-mount
 
 sudo mkdir -p memdisk-mount/boot/grub
-sudo mkdir -p memdisk-mount/kernels
-
-# Copy kernels
-echo "Copying student kernels"
-#sudo cp ./images/*.bin.xz memdisk-mount/kernels
-#max=13
-#count=0
-#for kernel_file in ./images/*.bin.xz; do
-#  if [ -f "$kernel_file" ]; then
-#    base_name=$(basename "$kernel_file" .bin.xz)
-#    sudo cp "$kernel_file" "memdisk-mount/kernels/$base_name.bin.xz"
-#    count=$((count+1))
-#    if [ $count -eq $max ]; then
-#      break
-#    fi
-#  fi
-#done
 
 # Copy required modules to memdisk
 echo "Copying GRUB files"
