@@ -152,7 +152,9 @@ echo "Copying student kernels"
 echo "Copying GRUB files"
 sudo cp /usr/lib/grub/i386-pc/{biosdisk,configfile,ext2,fat,gzio,ls,memdisk,multiboot,multiboot2,normal,part_gpt,part_msdos,xzio}.mod memdisk-mount/boot/grub/
 
-# Generate grub config
+
+
+# Generate GRUB config
 > grub.cfg
 echo "insmod gzio" >> grub.cfg
 echo "insmod xzio" >> grub.cfg
@@ -172,6 +174,8 @@ echo "set timeout=60" >> grub.cfg
 echo "set default=0" >> grub.cfg
 echo "set GRUB_TIMEOUT_STYLE=menu" >> grub.cfg
 
+echo "set menu_title=\"IKT218 Boot Menu\"" >> grub.cfg
+
 for file in "$directory"/*.bin.xz; do
   if [[ -f "$file" ]]; then
     filename=$(basename -- "$file")
@@ -188,20 +192,35 @@ EOL
 done
 
 
-sudo cp grub.cfg memdisk-mount/boot/grub/grub.cfg
+sudo cp grub_minimal.cfg memdisk-mount/boot/grub/grub_minimal.cfg
 
 
 # Unmount memdisk mount
 sudo umount memdisk-mount
 
 # Create GRUB image
-grub-mkimage -C auto -p /boot/grub -O i386-pc -c grub.cfg -o ./floppy/grub.img ext2 part_gpt gzio xzio multiboot2 multiboot part_msdos biosdisk normal ls configfile fat memdisk -m ./floppy/memdisk.img -v
+grub-mkimage -C auto -O i386-pc -c grub_minimal.cfg -o ./floppy/grub.img ext2 part_gpt gzio xzio multiboot2 multiboot part_msdos biosdisk normal ls configfile fat memdisk -m ./floppy/memdisk.img -v
 
 # Write images to floppy image
 dd if=/usr/lib/grub/i386-pc/boot.img of=./floppy/floppy.img bs=512 count=1 conv=notrunc
 dd if=./floppy/grub.img of=./floppy/floppy.img bs=512 seek=1 conv=notrunc
 
 # Write custom partition table to image
+dd if=./floppy/fat_table.bin of=./floppy/floppy.img bs=1 seek=446 count=64 conv=notrunc
+
+# Losetup and format floppy image
+sudo losetup --partscan /dev/loop0 ./floppy/floppy.img
+sudo mkfs.vfat /dev/loop0p1
+
+# Mount and copy kernels
+mkdir -p ./floppy/kernelsmount
+sudo mount /dev/loop0p1 ./floppy/kernelsmount
+sudo mkdir -p ./floppy/kernelsmount/kernels
+sudo cp ./images/*.bin.xz ./floppy/kernelsmount/kernels/
+sudo cp grub.cfg ./floppy/kernelsmount/grub.cfg
+
+sudo umount ./floppy/kernelsmount
+sudo losetup -d /dev/loop0
 
 
 echo ""
