@@ -147,7 +147,6 @@ echo "set timeout=60" >> grub.cfg
 echo "set default=0" >> grub.cfg
 echo "set GRUB_TIMEOUT_STYLE=menu" >> grub.cfg
 
-echo "set menu_title=\"IKT218 Boot Menu\"" >> grub.cfg
 
 for file in "$directory"/*.bin.xz; do
   if [[ -f "$file" ]]; then
