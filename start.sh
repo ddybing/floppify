@@ -77,16 +77,6 @@ for student_folder in "$students_dir"/*; do
     start_offset=1 # in megabytes
     echo "Updating start entry to ${start_offset}M"
 
-    # Replace ". = 1M;" with ". = ${start_offset}M;" in linker.ld
-    #sed -i "s/\. = [0-9]*M;/\. = ${start_offset}M;/g" $source_folder/src/arch/i386/linker.ld
-
-    #echo "Building Docker image"
-
-    #IMAGE_ID=$(docker build -f Dockerfile . -q)
-
-    #echo "Image ID: $IMAGE_ID"
-
-
     echo "Running build of OS for group $group_name"
     CONTAINER_ID=$(docker run -d -v $source_folder:/src -v $build_folder:/build ghcr.io/ddybing/floppify:latest)
 
