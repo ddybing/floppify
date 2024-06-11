@@ -217,6 +217,7 @@ sudo mkfs.vfat /dev/loop9p1
 mkdir -p ./floppy/kernelsmount
 sudo mount /dev/loop9p1 ./floppy/kernelsmount
 sudo mkdir -p ./floppy/kernelsmount/kernels
+rm -rf ./images/*.bin
 sudo cp ./images/*.bin.xz ./floppy/kernelsmount/kernels/
 sudo cp grub.cfg ./floppy/kernelsmount/grub.cfg
 
