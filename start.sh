@@ -123,13 +123,12 @@ sudo mkdir -p memdisk-mount/boot/grub
 
 # Copy required modules to memdisk
 echo "Copying GRUB files"
-sudo cp /usr/lib/grub/i386-pc/{biosdisk,configfile,ext2,fat,gzio,ls,memdisk,multiboot,multiboot2,normal,part_gpt,part_msdos,xzio}.mod memdisk-mount/boot/grub/
+sudo cp /usr/lib/grub/i386-pc/{all_video,biosdisk,configfile,echo,fat,gfxmenu,gfxterm,jpeg,ls,memdisk,multiboot,multiboot2,normal,part_gpt,part_msdos,png,sleep,xzio,video_fb}.mod memdisk-mount/boot/grub/
 
 
 
 # Generate GRUB config
 > grub.cfg
-echo "insmod gzio" >> grub.cfg
 echo "insmod xzio" >> grub.cfg
 echo "insmod multiboot2" >> grub.cfg
 echo "insmod multiboot" >> grub.cfg
@@ -140,12 +139,25 @@ echo "insmod ls" >> grub.cfg
 echo "insmod configfile" >> grub.cfg
 echo "insmod fat" >> grub.cfg
 echo "insmod memdisk" >> grub.cfg
-echo "insmod ext2" >> grub.cfg
 echo "insmod part_gpt" >> grub.cfg
+echo "insmod all_video" >> grub.cfg
+echo "insmod jpeg" >> grub.cfg
+echo "insmod video_fb" >> grub.cfg
+echo "insmod gfxmenu" >> grub.cfg
+echo "insmod echo" >> grub.cfg
+echo "insmod png" >> grub.cfg
+echo "insmod sleep" >> grub.cfg
 
+echo "set root=(fd0,msdos1)" >> grub.cfg
 echo "set timeout=60" >> grub.cfg
 echo "set default=0" >> grub.cfg
+echo "terminal_output gfxterm" >> grub.cfg
+echo "set gfxmode=320x240" >> grub.cfg
+echo "set gfxpayload=keep" >> grub.cfg
 echo "set GRUB_TIMEOUT_STYLE=menu" >> grub.cfg
+echo "set theme='/theme.txt'" >> grub.cfg
+echo "export theme" >> grub.cfg
+
 
 
 for file in "$directory"/*.bin.xz; do
@@ -155,7 +167,9 @@ for file in "$directory"/*.bin.xz; do
 
     cat <<EOL >> "$grub_cfg"
 menuentry '$entry_name' {
-    multiboot2 (fd0,msdos1)/kernels/$filename
+    echo 'Loading $filename kernel...'
+    multiboot2 (fd0,msdos1)/kernels/$filename verbose
+    echo 'Booting...'
     boot
 }
 EOL
@@ -171,7 +185,7 @@ sudo cp grub_minimal.cfg memdisk-mount/boot/grub/grub_minimal.cfg
 sudo umount memdisk-mount
 
 # Create GRUB image
-grub-mkimage -C auto -O i386-pc -c grub_minimal.cfg -o ./floppy/grub.img ext2 part_gpt gzio xzio multiboot2 multiboot part_msdos biosdisk normal ls configfile fat memdisk -m ./floppy/memdisk.img -v
+grub-mkimage -C auto -O i386-pc -c grub_minimal.cfg -o ./floppy/grub.img sleep png video_fb all_video jpeg part_gpt echo xzio gfxterm gfxmenu multiboot2 multiboot part_msdos biosdisk normal ls configfile fat memdisk -m ./floppy/memdisk.img -v
 
 # Write images to floppy image
 dd if=/dev/zero of=./floppy/floppy.img bs=512 count=2880
@@ -192,6 +206,9 @@ sudo mkdir -p ./floppy/kernelsmount/kernels
 rm -rf ./images/*.bin
 sudo cp ./images/*.bin.xz ./floppy/kernelsmount/kernels/
 sudo cp grub.cfg ./floppy/kernelsmount/grub.cfg
+sudo cp theme.txt ./floppy/kernelsmount/theme.txt
+sudo cp background.png ./floppy/kernelsmount/background.png
+
 
 sudo umount ./floppy/kernelsmount
 sudo losetup -d /dev/loop9

@@ -1,0 +1,17 @@
+desktop-image: "/background.png"
+#desktop-color: "#000000"
+
+title-text: ""
+title-color: "#ffffff"
+title-font: "Arial"
+
++ boot_menu {
+    item_color="#aaaaaa"
+    selected_item_color="#ffb000"
+    scrollbar="true"
+    visible="true"
+    left=10%
+    width=50%
+    top=30%
+    height=50%
+}
