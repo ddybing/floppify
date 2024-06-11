@@ -202,6 +202,7 @@ sudo umount memdisk-mount
 grub-mkimage -C auto -O i386-pc -c grub_minimal.cfg -o ./floppy/grub.img ext2 part_gpt gzio xzio multiboot2 multiboot part_msdos biosdisk normal ls configfile fat memdisk -m ./floppy/memdisk.img -v
 
 # Write images to floppy image
+dd if=/dev/zero of=./floppy/floppy.img bs=512 count=2880
 dd if=/usr/lib/grub/i386-pc/boot.img of=./floppy/floppy.img bs=512 count=1 conv=notrunc
 dd if=./floppy/grub.img of=./floppy/floppy.img bs=512 seek=1 conv=notrunc
 
@@ -209,18 +210,18 @@ dd if=./floppy/grub.img of=./floppy/floppy.img bs=512 seek=1 conv=notrunc
 dd if=./floppy/fat_table.bin of=./floppy/floppy.img bs=1 seek=446 count=64 conv=notrunc
 
 # Losetup and format floppy image
-sudo losetup --partscan /dev/loop0 ./floppy/floppy.img
-sudo mkfs.vfat /dev/loop0p1
+sudo losetup --partscan /dev/loop9 ./floppy/floppy.img
+sudo mkfs.vfat /dev/loop9p1
 
 # Mount and copy kernels
 mkdir -p ./floppy/kernelsmount
-sudo mount /dev/loop0p1 ./floppy/kernelsmount
+sudo mount /dev/loop9p1 ./floppy/kernelsmount
 sudo mkdir -p ./floppy/kernelsmount/kernels
 sudo cp ./images/*.bin.xz ./floppy/kernelsmount/kernels/
 sudo cp grub.cfg ./floppy/kernelsmount/grub.cfg
 
 sudo umount ./floppy/kernelsmount
-sudo losetup -d /dev/loop0
+sudo losetup -d /dev/loop9
 
 
 echo ""
