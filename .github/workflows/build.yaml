@@ -41,7 +41,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.PAT }}
         with:
           tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          release_name: Release ${{ github.sha }}
           draft: false
           prerelease: false
       - name: Upload Release Asset
