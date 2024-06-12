@@ -4,7 +4,7 @@ students_dir="./students"
 
 
 # Create necessary folders
-mkdir -p images students floppy
+mkdir -p images students
 
 # Set Grub and kernel variables
 directory="./images"
