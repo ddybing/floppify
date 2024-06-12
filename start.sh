@@ -123,7 +123,7 @@ sudo mkdir -p memdisk-mount/boot/grub
 
 # Copy required modules to memdisk
 echo "Copying GRUB files"
-sudo cp /usr/lib/grub/i386-pc/{all_video,biosdisk,configfile,echo,fat,gfxmenu,gfxterm,jpeg,ls,memdisk,multiboot,multiboot2,normal,part_gpt,part_msdos,png,sleep,xzio,video_fb}.mod memdisk-mount/boot/grub/
+sudo cp /usr/lib/grub/i386-pc/{all_video,biosdisk,configfile,echo,fat,gfxmenu,gfxterm,ls,memdisk,multiboot,multiboot2,normal,part_gpt,part_msdos,png,xzio,video_fb}.mod memdisk-mount/boot/grub/
 
 
 
@@ -141,12 +141,10 @@ echo "insmod fat" >> grub.cfg
 echo "insmod memdisk" >> grub.cfg
 echo "insmod part_gpt" >> grub.cfg
 echo "insmod all_video" >> grub.cfg
-echo "insmod jpeg" >> grub.cfg
 echo "insmod video_fb" >> grub.cfg
 echo "insmod gfxmenu" >> grub.cfg
 echo "insmod echo" >> grub.cfg
 echo "insmod png" >> grub.cfg
-echo "insmod sleep" >> grub.cfg
 
 echo "set root=(fd0,msdos1)" >> grub.cfg
 echo "set timeout=60" >> grub.cfg
@@ -185,7 +183,7 @@ sudo cp grub_minimal.cfg memdisk-mount/boot/grub/grub_minimal.cfg
 sudo umount memdisk-mount
 
 # Create GRUB image
-grub-mkimage -C auto -O i386-pc -c grub_minimal.cfg -o ./floppy/grub.img sleep png video_fb all_video jpeg part_gpt echo xzio gfxterm gfxmenu multiboot2 multiboot part_msdos biosdisk normal ls configfile fat memdisk -m ./floppy/memdisk.img -v
+grub-mkimage -C auto -O i386-pc -c grub_minimal.cfg -o ./floppy/grub.img png video_fb all_video part_gpt echo xzio gfxterm gfxmenu multiboot2 multiboot part_msdos biosdisk normal ls configfile fat memdisk -m ./floppy/memdisk.img -v
 
 # Write images to floppy image
 dd if=/dev/zero of=./floppy/floppy.img bs=512 count=2880
