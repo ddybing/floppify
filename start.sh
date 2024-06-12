@@ -2,6 +2,7 @@
 
 students_dir="./students"
 
+
 # Create necessary folders
 mkdir -p images students floppy
 
@@ -107,6 +108,11 @@ for kernel_file in ./images/*.bin; do
   fi
 done
 
+
+if [ "$1" == "--cleanup" ]; then
+  echo "Cleaning up"
+  sudo rm -rf ./students/
+fi
 
 # Create memdisk image
 echo "Creating and formatting memdisk image"
