@@ -16,6 +16,11 @@ jobs:
         sudo apt update
         sudo apt install -y python3
         ./start.sh --cleanup
+    - name: Upload floppy.img
+      uses: actions/upload-artifact@v2
+      with:
+       name: floppy.img
+       path: ./floppy/floppy.img
 
 
   upload-release-asset:
@@ -27,7 +32,7 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v2
         with:
-          name: .floppy/floppy.img
+          name: floppy.img
           path: .
       - name: Create Release
         id: create_release
