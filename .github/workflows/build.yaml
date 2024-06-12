@@ -40,8 +40,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
         with:
-          tag_name: ${{ github.sha }}
-          release_name: Release ${{ github.sha }}
+          tag_name: main-${{ github.sha }}
+          release_name: Release-main${{ github.sha }}
           draft: false
           prerelease: false
       - name: Upload Release Asset
