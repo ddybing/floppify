@@ -4,8 +4,14 @@
 
 ___
 
-The main objective of this project is to create a bootable collection of the operating systems created in IKT218. 
+This repository represents a collection of tools and scripts that is able to download all forks of the IKT218 repository.
+Each fork is then compiled and written to a floppy disk with a custom GRUB2 configuration and theme. 
 
-This repository should contain a collection of scripts and/or tools that can retrieve the source code of these operating systems, compile them and then write them together with a Multiboot-compatible boot loader (likely GRUB Legacy) to a physical floppy diskette. 
+This allows the user to boot the diskette on any x86 compatible machine with a 3.5" floppy drive. 
 
-The goal is to be able to boot these operating systems on a physical machine.
+It is recommended to have at least 72MB of RAM, due to the memory needed by GRUB2 to keep e.g. graphics in memory. 
+A more lightweight version without graphics is planned.
+
+<p align="center">
+  <img src="screenshot.png" alt="Screenshot of the floppy image being run in QEMU" />
+</p>
