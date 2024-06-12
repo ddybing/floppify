@@ -15,4 +15,4 @@ jobs:
         chmod +x ./start.sh
         sudo apt update
         sudo apt install -y python3
-        ./start.sh
+        ./start.sh --cleanup
