@@ -18,4 +18,4 @@ A more lightweight version without graphics, which would require less memory, is
 </p>
 
 NOTE: The resulting floppy image, as well as the floppy image posted on this repository, contain work completed by students at UiA. 
-I do not claim any rights to their work, and their work is included only to demonstrate the effectiveness of the this tool. 
+I do not claim any rights to their work, and their work is included only to demonstrate the effectiveness of this tool. 
