@@ -30,7 +30,7 @@ while True:
     page += 1
 
 
-print("\nFetched", len(forks), "forks")
+print("\nFound", len(forks), "forks")
 
 for i, url in enumerate(tqdm(forks, desc="Cloning", unit="repo", bar_format="{l_bar}{bar}| {n_fmt}/{total_fmt} [{elapsed}]")):
     folder_name = f"fork{i + 1}"
