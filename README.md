@@ -17,5 +17,13 @@ A more lightweight version without graphics, which would require less memory, is
   <img src="screenshot.png" alt="Screenshot of the floppy image being run in QEMU" />
 </p>
 
-NOTE: The resulting floppy image, as well as the floppy image posted on this repository, contain work completed by students at UiA. 
-I do not claim any rights to their work, and their work is included only to demonstrate the effectiveness of this tool. 
+Command to run floppy image in QEMU
+
+`qemu-system-i386 -fda floppy.img -m 72M`
+
+
+This will start a new QEMU virtual machine instance with 72MB of memory.
+
+
+**NOTE:** *The resulting floppy image, as well as the floppy image posted on this repository, contain work completed by students at UiA. 
+I do not claim any rights to their work, and their work is included only to demonstrate the effectiveness of this tool.*
