@@ -35,6 +35,16 @@ Thumbs.db
 
 # Other files and folders
 *.deb
+
+
+# Project specific files and folders
 students
 images
 kernels
+memdisk-mount
+images
+kernels
+limine
+*ik218*
+tempmount
+tmp
