@@ -3,10 +3,9 @@ import requests
 import time
 import os
 import subprocess
-from tqdm import tqdm
 
 # Repository URL
-repository_url = "https://github.com/uiaict/2024-ikt218-osdev"
+repository_url = "https://github.com/uiaict/2025-ikt218-osdev"
 
 owner = repository_url.split('/')[3]
 repo = repository_url.split('/')[4]
@@ -32,8 +31,16 @@ while True:
 
 print("\nFound", len(forks), "forks")
 
-for i, url in enumerate(tqdm(forks, desc="Cloning", unit="repo", bar_format="{l_bar}{bar}| {n_fmt}/{total_fmt} [{elapsed}]")):
+for i, url in enumerate(forks):
     folder_name = f"fork{i + 1}"
     clone_command = f"git clone {url} students/{folder_name} > /dev/null 2>&1"
     subprocess.run(clone_command, shell=True)
-subprocess.run(clone_command, shell=True)
+
+    percentage = (i + 1) / len(forks) * 100
+    bar_length = 50 # Length of bar
+    filled_length = int(bar_length * percentage // 100)
+    bar = '#' * filled_length + '-' * (bar_length - filled_length) 
+
+    print(f"Cloning: [{bar}] {percentage:.1f}% complete", end="\r")
+
+print("\nCloning complete.")
